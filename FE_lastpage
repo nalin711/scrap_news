@@ -1,0 +1,25 @@
+import requests
+from bs4 import BeautifulSoup
+import newspaper
+year = 2013
+month = 12
+page_no = 1
+last_page = 2
+while page_no <= last_page:
+    url = 'https://www.financialexpress.com/archive/%s/%s/?page=%s' % (year, month, page_no)
+    print(url)
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    body = soup.findAll(class_="next")
+    i = 0
+    for articles in body:
+        links = articles.findAll("a")
+        for link in links:
+            link_url = link.get("href")
+            print(link_url[:])
+            if page_no >= 9:
+                last_page = int(link_url[-2:])
+            else:
+                last_page = int(link_url[-1:])
+    page_no = page_no + 1
+print ("Last page has arrived")
